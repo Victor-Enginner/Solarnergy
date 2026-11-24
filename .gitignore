@@ -8,3 +8,6 @@ dist
 .aistudio/
 *.png.bak
 server.js
+
+public/assets/aistudio/
+public/assets/images/*.png
