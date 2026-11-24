@@ -1,0 +1,540 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lumen Roof — Energia Solar Inteligente</title>
+<meta name="description" content="Esqueça o mercado de energia, as condições climáticas e as estações do ano. Nosso Controlador Inteligente garante zero conta de luz por 7 anos.">
+<meta property="og:title" content="Lumen Roof — Energia Solar Inteligente">
+<meta property="og:description" content="Esqueça o mercado de energia, as condições climáticas e as estações do ano. Nosso Controlador Inteligente garante zero conta de luz por 7 anos.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --u:min(calc(100vw/1600),calc(100vh/900));
+  --k:0;--k2:0;--dip:0;--on-m:1;--on-n:0;
+  --ink:color-mix(in srgb,#14202f calc((1 - var(--k))*100%),#fff);
+  --nav:color-mix(in srgb,#1b2736 calc((1 - var(--k))*100%),#eef1f6);
+  --soft:color-mix(in srgb,#1b2736 calc((1 - var(--k))*100%),#dfe5ee);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;scroll-behavior:smooth}
+body{min-height:100%;background:#0b1426;font-family:"Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;color:#fff}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+
+/* Scroll Stage Container para o Hero de Transição */
+.scroll-stage{position:relative;height:240vh;width:100%}
+.hero{position:sticky;top:0;height:100svh;min-height:520px;overflow:hidden;isolation:isolate;background:#0b1426;width:100%}
+.layer,.layer img{position:absolute;inset:0;width:100%;height:100%}
+.layer img{display:block;object-fit:cover;object-position:50% 62%}
+.sky img{filter:blur(calc(7*var(--u)));transform:scale(1.05)}
+#skyN{opacity:var(--k)}
+.home{will-change:transform;transform:translate3d(0,var(--sink,0px),0)}
+.home .set{position:absolute;inset:0;visibility:hidden}
+.home .set.is-on{visibility:visible}
+.ground{-webkit-mask-image:linear-gradient(transparent 54%,#000 64%);mask-image:linear-gradient(transparent 54%,#000 64%)}
+.tilt{position:absolute;inset:0;pointer-events:none;-webkit-backdrop-filter:blur(calc(9*var(--u)));backdrop-filter:blur(calc(9*var(--u)));-webkit-mask-image:linear-gradient(transparent 70%,#000 92%);mask-image:linear-gradient(transparent 70%,#000 92%)}
+#fog{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.ui{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;pointer-events:none}
+.ui a,.ui button,.ui input{pointer-events:auto}
+
+/* Barra Superior: Apenas Logo, Simulador e WhatsApp */
+.bar{width:100%;display:flex;align-items:center;justify-content:space-between;padding:calc(22*var(--u)) calc(42*var(--u)) 0;color:var(--nav)}
+.logo{display:flex;align-items:center;gap:calc(9*var(--u));font-size:calc(25*var(--u));font-weight:500;letter-spacing:-.025em;color:var(--ink);cursor:pointer}
+.logo svg{width:calc(38*var(--u));height:calc(38*var(--u));flex:none}
+.nav-actions{display:flex;align-items:center;gap:calc(16*var(--u))}
+
+.btn-nav-sim{display:inline-flex;align-items:center;gap:calc(8*var(--u));height:calc(46*var(--u));padding:0 calc(22*var(--u));border-radius:99px;
+  background:rgba(120,132,140,.24);border:1px solid rgba(255,255,255,.2);color:var(--ink);font-size:calc(15*var(--u));font-weight:500;transition:all .25s;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);cursor:pointer}
+.btn-nav-sim:hover{background:rgba(120,132,140,.4);transform:translateY(-1px)}
+.btn-nav-sim svg{width:calc(16*var(--u));height:calc(16*var(--u))}
+
+.btn-nav-wa{display:inline-flex;align-items:center;gap:calc(8*var(--u));height:calc(46*var(--u));padding:0 calc(22*var(--u));border-radius:99px;
+  background:#25d366;color:#0b1426;font-size:calc(15*var(--u));font-weight:600;transition:all .25s;box-shadow:0 6px 20px rgba(37,211,102,.3);cursor:pointer}
+.btn-nav-wa:hover{background:#2ee572;transform:translateY(-1px);box-shadow:0 10px 28px rgba(37,211,102,.45)}
+.btn-nav-wa svg{width:calc(18*var(--u));height:calc(18*var(--u));fill:currentColor}
+
+/* Telemetria */
+.telemetry-badge{margin-top:calc(16*var(--u));display:inline-flex;align-items:center;gap:calc(8*var(--u));padding:calc(5*var(--u)) calc(14*var(--u));border-radius:99px;
+  background:rgba(120,132,140,.22);border:1px solid rgba(255,255,255,.18);font-size:calc(13.5*var(--u));font-weight:500;color:var(--ink);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);opacity:calc(1 - var(--dip)*.8);transition:all .3s}
+.telemetry-dot{width:calc(8*var(--u));height:calc(8*var(--u));border-radius:50%;background:#8beb48;box-shadow:0 0 10px #8beb48;animation:pulse-dot 2s infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.85)}}
+
+h1{margin-top:calc(32*var(--u));text-align:center;font-size:calc(64*var(--u));line-height:1.09;font-weight:500;letter-spacing:-.022em;color:var(--ink)}
+h1 span{display:block}
+h1 .l1,h1 .y{opacity:calc(1 - var(--dip)*.8)}
+h1 i{font-style:normal;color:color-mix(in srgb,#14202f calc((1 - var(--k2))*42%),color-mix(in srgb,#fff calc(var(--k2)*100%),#7c8794))}
+h1 .y{display:inline}
+
+.dock{margin-top:auto;padding-bottom:calc(28*var(--u));display:flex;flex-direction:column;align-items:center}
+.toggle{position:relative;display:grid;grid-template-columns:1fr 1fr;width:calc(524*var(--u));height:calc(86*var(--u));padding:calc(2*var(--u));border-radius:calc(16*var(--u));overflow:hidden;
+  background:rgba(120,132,140,.34);border:1px solid rgba(255,255,255,.2);-webkit-backdrop-filter:blur(calc(14*var(--u)));backdrop-filter:blur(calc(14*var(--u)))}
+.toggle button{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:calc(3*var(--u));border-radius:calc(13*var(--u));color:#fff;overflow:hidden}
+.toggle button:before{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(160deg,#f7f8dc,#e2ee9f 90%);box-shadow:inset 0 0 calc(18*var(--u)) rgba(255,255,255,.65);opacity:var(--on)}
+.toggle b,.toggle small{position:relative;color:color-mix(in srgb,#1c2316 calc(var(--on)*100%),#fff)}
+.toggle b{font-size:calc(23*var(--u));font-weight:500;letter-spacing:-.012em}
+.toggle small{font-size:calc(15*var(--u));opacity:.72}
+.toggle button:focus-visible{outline:2px solid #fff;outline-offset:-4px}
+#bm{--on:var(--on-m)}
+#bn{--on:var(--on-n)}
+
+.cap{margin-top:calc(18*var(--u));text-align:center;font-size:calc(16.4*var(--u));line-height:1.35;color:var(--soft);max-width:calc(760*var(--u))}
+
+/* Motion Scroll Indicator */
+.scroll-cue{margin-top:calc(14*var(--u));display:inline-flex;align-items:center;gap:calc(8*var(--u));padding:calc(6*var(--u)) calc(16*var(--u));border-radius:99px;background:rgba(120,132,140,.22);border:1px solid rgba(255,255,255,.2);color:var(--ink);font-size:calc(13*var(--u));font-weight:500;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);cursor:pointer;transition:all .3s ease;animation:bounce-cue 2.4s ease-in-out infinite;opacity:calc(1 - var(--dip)*.8)}
+.scroll-cue:hover{background:rgba(120,132,140,.36);transform:scale(1.03)}
+.scroll-cue-icon{display:inline-flex;align-items:center;justify-content:center;width:calc(18*var(--u));height:calc(18*var(--u));border-radius:50%;background:rgba(255,255,255,.2)}
+.scroll-cue-icon svg{width:calc(12*var(--u));height:calc(12*var(--u));stroke:currentColor}
+@keyframes bounce-cue{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+/* ========================================================
+   SEGUNDO HERO: SIMULADOR FOTOGRÁFICO DE TELHADO SOLAR
+   ======================================================== */
+.hero-photo-sim{position:relative;min-height:100svh;width:100%;background:radial-gradient(ellipse at 50% 25%, #18283e 0%, #0d1626 65%, #060a12 100%);overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px 24px;box-sizing:border-box}
+
+/* Header Flutuante do Simulador */
+.hud-top{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;width:min(680px,92vw);margin-bottom:14px;margin-top:52px}
+.hud-tag{display:inline-flex;align-items:center;gap:6px;padding:4px 14px;border-radius:99px;background:rgba(226,238,159,.15);border:1px solid rgba(226,238,159,.3);color:#e2ee9f;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.hud-title{font-size:clamp(24px,3.2vw,38px);font-weight:600;color:#fff;letter-spacing:-.02em}
+.hud-hint{font-size:14px;color:#8fa4c4}
+
+/* Botão Voltar ao Início no Top-Left */
+.hud-top-left{position:absolute;top:28px;left:40px;z-index:20}
+.hud-pill-btn{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:99px;background:rgba(16,26,42,.75);border:1px solid rgba(255,255,255,.18);color:#dfe5ee;font-size:13px;font-weight:500;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);cursor:pointer;transition:all .25s}
+.hud-pill-btn:hover{background:rgba(255,255,255,.15);color:#fff;transform:translateY(-1px)}
+.hud-pill-btn svg{width:16px;height:16px}
+
+/* Alternador Dia / Noite do Simulador */
+.hud-top-right{position:absolute;top:28px;right:40px;z-index:20}
+.sim-mode-toggle{display:flex;align-items:center;gap:4px;background:rgba(16,26,42,.75);padding:4px;border-radius:99px;border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.sim-mode-btn{padding:6px 14px;border-radius:99px;font-size:12.5px;font-weight:500;color:#dfe5ee;transition:all .2s;cursor:pointer}
+.sim-mode-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
+.sim-mode-btn.is-active{background:rgba(226,238,159,.22);color:#e2ee9f;border:1px solid rgba(226,238,159,.35);font-weight:600}
+
+/* Stage Fotográfico da Casa */
+.photo-house-stage{position:relative;width:min(1100px, 94vw);aspect-ratio:16/9;max-height:540px;max-height:min(540px, 42vh);border-radius:24px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.1);background:#090f18}
+.photo-house-img{width:100%;height:100%;object-fit:cover;object-position:50% 58%;transition:opacity .4s ease}
+
+/* Badge Flutuante de Configuração Fotográfica */
+.photo-tier-badge{position:absolute;top:18px;left:50%;transform:translateX(-50%);z-index:10;padding:6px 16px;border-radius:99px;background:rgba(12,18,28,.82);border:1px solid rgba(226,238,159,.35);color:#e2ee9f;font-size:13px;font-weight:600;letter-spacing:.02em;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,0,0,.5);white-space:nowrap;pointer-events:none}
+
+/* Dock de Controle Inferior em Vidro */
+.hud-bottom-dock{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);z-index:20;width:min(960px,94vw);background:rgba(16,26,44,.86);border:1px solid rgba(255,255,255,.18);border-radius:24px;padding:18px 24px;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);box-shadow:0 24px 60px rgba(0,0,0,.65);display:flex;flex-direction:column;gap:14px}
+
+/* Seletor de Complexidade por Abas */
+.tier-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tier-btn{display:flex;flex-direction:column;align-items:center;padding:10px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#a5b5c9;transition:all .25s;cursor:pointer;text-align:center}
+.tier-btn:hover{background:rgba(255,255,255,.09);color:#fff}
+.tier-btn.is-active{background:linear-gradient(160deg,rgba(247,248,220,.2),rgba(226,238,159,.25));border-color:#d8ee8e;color:#fff}
+.tier-btn b{font-size:13px;font-weight:600}
+.tier-btn span{font-size:11px;opacity:.75}
+
+/* Slider de Placas */
+.slider-container{display:flex;align-items:center;gap:18px}
+.slider-label{font-size:13px;color:#a5b5c9;white-space:nowrap}
+.slider-track{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.2);outline:none;-webkit-appearance:none;accent-color:#d8ee8e;cursor:pointer}
+.slider-count-badge{padding:4px 12px;border-radius:99px;background:rgba(226,238,159,.2);border:1px solid #d8ee8e;color:#e2ee9f;font-size:14px;font-weight:600;min-width:90px;text-align:center}
+
+/* Barra de Métricas em Tempo Real + Ação WhatsApp */
+.hud-metrics-row{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid rgba(255,255,255,.1);padding-top:14px;flex-wrap:wrap}
+.metrics-chips{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.metric-chip{display:flex;flex-direction:column}
+.metric-chip .lbl{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#8fa4c4}
+.metric-chip .val{font-size:16px;font-weight:600;color:#fff}
+.metric-chip .val.highlight{color:#d8ee8e}
+
+.btn-cta-wa{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 24px;border-radius:99px;background:#25d366;color:#0b1426;font-size:14.5px;font-weight:600;transition:all .25s;box-shadow:0 8px 25px rgba(37,211,102,.35);white-space:nowrap;cursor:pointer;margin-left:auto}
+.btn-cta-wa:hover{background:#2ee572;transform:translateY(-2px);box-shadow:0 12px 35px rgba(37,211,102,.5)}
+.btn-cta-wa svg{width:18px;height:18px;fill:currentColor}
+
+@media (max-width:820px){
+  :root{--u:1px}
+  .scroll-stage{height:200vh}
+  .bar{padding:16px 16px 0}
+  .logo{font-size:21px}.logo svg{width:32px;height:32px}
+  .btn-nav-sim{display:none}
+  .btn-nav-wa{height:38px;padding:0 14px;font-size:13px}
+  .telemetry-badge{margin-top:12px;font-size:12px}
+  h1{margin-top:16px;padding:0 16px;font-size:clamp(30px,8.5vw,50px)}
+  .layer img,.home .cut{object-position:72% 62%!important}
+  .dock{width:100%;padding:0 16px 18px}
+  .toggle{width:100%;max-width:440px;height:72px}
+  .toggle b{font-size:18px}.toggle small{font-size:12px}
+  .cap{font-size:13.5px;max-width:360px}
+  .cap br{display:none}
+  .scroll-cue{margin-top:10px;font-size:12px}
+  .hero-photo-sim{padding:20px 14px 20px}
+  
+  /* 3D HUD no mobile */
+  .hud-camera{display:none}
+  .hud-top{top:16px;padding:0 16px}
+  .hud-bottom-dock{bottom:14px;padding:16px 14px;gap:12px}
+  .tier-tabs{gap:4px}
+  .tier-btn{padding:8px 6px}
+  .tier-btn b{font-size:11px}.tier-btn span{display:none}
+  .slider-container{gap:10px}
+  .slider-label{display:none}
+  .metrics-chips{gap:10px;width:100%;justify-content:space-between}
+  .metric-chip .val{font-size:14px}
+  .btn-cta-wa{width:100%;justify-content:center;margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<!-- HERO 1: TRANSIÇÃO CINEMÁTICA MANHÃ / NOITE ORIENTADA A SCROLL -->
+<div class="scroll-stage" id="scrollStage">
+  <main class="hero" id="hero">
+    <div class="layer sky">
+      <img id="skyM" alt="" src="/assets/images/sky_morning.webp">
+      <img id="skyN" alt="" src="/assets/images/sky_night.webp">
+    </div>
+    <div class="layer home">
+      <div class="set is-on" id="setM">
+        <div class="layer ground"><img alt="" src="/assets/images/ground_morning.webp"></div>
+        <img class="cut" alt="Uma casa de campo em madeira escura com painéis solares sob a suave luz da manhã" src="/assets/images/lumen_standard_morning.webp" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%">
+      </div>
+      <div class="set" id="setN">
+        <div class="layer ground"><img alt="" src="/assets/images/ground_night.webp"></div>
+        <img class="cut" alt="A mesma casa ao entardecer com janelas iluminadas em tom âmbar acolhedor" src="/assets/images/lumen_standard_night.webp" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 62%">
+      </div>
+    </div>
+    <div class="tilt"></div>
+    <canvas id="fog" aria-hidden="true"></canvas>
+    <div class="ui">
+      <!-- BARRA SUPERIOR: Apenas Logo, Simulador e WhatsApp -->
+      <header class="bar">
+        <a class="logo" href="#" aria-label="Lumen Roof">
+          <svg viewBox="0 0 40 40" aria-hidden="true"><g fill="color-mix(in srgb,#6d8f2a calc((1 - var(--k))*100%),#d8ee8e)"><circle cx="20" cy="20" r="0"/><path id="ray" d="M18.3 3.5h3.4l.9 8.4h-5.2Z"/><use href="#ray" transform="rotate(30 20 20)"/><use href="#ray" transform="rotate(60 20 20)"/><use href="#ray" transform="rotate(90 20 20)"/><use href="#ray" transform="rotate(120 20 20)"/><use href="#ray" transform="rotate(150 20 20)"/><use href="#ray" transform="rotate(180 20 20)"/><use href="#ray" transform="rotate(210 20 20)"/><use href="#ray" transform="rotate(240 20 20)"/><use href="#ray" transform="rotate(270 20 20)"/><use href="#ray" transform="rotate(300 20 20)"/><use href="#ray" transform="rotate(330 20 20)"/></g></svg>
+          Lumen Roof
+        </a>
+        <div class="nav-actions">
+          <button class="btn-nav-sim" id="btnNavSim" aria-label="Ir para Simulador Solar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path><circle cx="12" cy="12" r="4"></circle></svg>
+            <span>Simulador Solar</span>
+          </button>
+          <a class="btn-nav-wa" id="btnNavWa" href="https://wa.me/5511999999999?text=Ol%C3%A1%21%20Gostaria%20de%20um%20projeto%20solar%20personalizado%20Lumen%20Roof." target="_blank" rel="noopener noreferrer" aria-label="Falar no WhatsApp">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 00-3.48-8.413z"/></svg>
+            <span>WhatsApp</span>
+          </a>
+        </div>
+      </header>
+
+      <div class="telemetry-badge" id="telemetryBadge">
+        <span class="telemetry-dot"></span>
+        <span id="telemetryText">Geração Solar Ativa: 100% Autonomia e Injeção em Rede</span>
+      </div>
+
+      <h1><span class="l1">R$ 0 na Conta de Luz</span><span><i>pelos próximos</i> <span class="y">7 Anos</span></span></h1>
+      <div class="dock">
+        <div class="toggle" role="group" aria-label="Período do dia">
+          <button id="bm" aria-pressed="true"><b>Manhã</b><small>R$ 0 em Eletricidade</small></button>
+          <button id="bn" aria-pressed="false"><b>Noite</b><small>R$ 0 em Eletricidade</small></button>
+        </div>
+        <p class="cap">Esqueça o mercado de energia, as condições climáticas e as estações. Nosso <br>Controlador Inteligente garante que você não pague conta de luz por sete anos.</p>
+        <button class="scroll-cue" id="scrollCue" aria-label="Rolar para o Simulador de Telhado 3D">
+          <span class="scroll-cue-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="7 13 12 18 17 13"></polyline>
+              <polyline points="7 6 12 11 17 6"></polyline>
+            </svg>
+          </span>
+          <span id="scrollCueText">Role para descer na névoa e anoitecer ↓</span>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ========================================================
+     HERO 2: SIMULADOR FOTOGRÁFICO DE TELHADO SOLAR
+     ======================================================== -->
+<section class="hero-photo-sim" id="simulador-section" aria-label="Simulador de Telhado Solar">
+  <!-- Botão Voltar ao Início -->
+  <div class="hud-top-left">
+    <button class="hud-pill-btn" id="btnBackToHero" aria-label="Voltar para a apresentação inicial">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="18 15 12 9 6 15"></polyline></svg>
+      <span>Voltar ao Início</span>
+    </button>
+  </div>
+
+  <!-- Alternador Dia / Noite do Telhado -->
+  <div class="hud-top-right">
+    <div class="sim-mode-toggle" role="group" aria-label="Iluminação da Casa">
+      <button class="sim-mode-btn is-active" data-mode="morning">☀️ Dia</button>
+      <button class="sim-mode-btn" data-mode="night">🌙 Noite</button>
+    </div>
+  </div>
+
+  <!-- Header Superior Flutuante Minimalista -->
+  <div class="hud-top">
+    <div class="hud-tag">Engenharia Solar Fotovoltaica</div>
+    <h2 class="hud-title">Quantas placas cabem no seu telhado?</h2>
+    <p class="hud-hint">Simule o layout exato de módulos e a economia garantida para sua residência</p>
+  </div>
+
+  <!-- Stage Fotográfico com a Casa Real (Padrão Tesla Solar) -->
+  <div class="photo-house-stage">
+    <div class="photo-tier-badge" id="photoTierBadge">Residencial Padrão: 16 Placas • Cobertura Balanceada</div>
+    <img id="photoHouseImg" class="photo-house-img" src="/assets/images/lumen_standard_morning.webp" alt="Configuração Fotovoltaica Lumen Roof">
+  </div>
+
+  <!-- Dock Inferior em Vidro Fosco -->
+  <div class="hud-bottom-dock">
+    <!-- Abas de Complexidade -->
+    <div class="tier-tabs" role="tablist">
+      <button class="tier-btn" data-tier="compact" role="tab">
+        <b>Compacto</b>
+        <span>6 a 10 Placas (1 Água)</span>
+      </button>
+      <button class="tier-btn is-active" data-tier="standard" role="tab">
+        <b>Residencial Padrão</b>
+        <span>12 a 20 Placas (2 Águas)</span>
+      </button>
+      <button class="tier-btn" data-tier="villa" role="tab">
+        <b>Villa Avançado</b>
+        <span>22 a 32 Placas + Baterias</span>
+      </button>
+    </div>
+
+    <!-- Slider de Contagem de Placas (Mínimo ao Máximo) -->
+    <div class="slider-container">
+      <span class="slider-label">Mínimo (6)</span>
+      <input type="range" min="6" max="32" step="1" value="16" class="slider-track" id="panelSlider" aria-label="Quantidade de placas solares">
+      <span class="slider-label">Máximo (32)</span>
+      <div class="slider-count-badge" id="countDisplay">16 Placas</div>
+    </div>
+
+    <!-- Linha de Métricas em Tempo Real + CTA Direto WhatsApp -->
+    <div class="hud-metrics-row">
+      <div class="metrics-chips">
+        <div class="metric-chip">
+          <span class="lbl">Potência Instalada</span>
+          <span class="val highlight" id="kwpDisplay">8.8 kWp</span>
+        </div>
+        <div class="metric-chip">
+          <span class="lbl">Geração Média</span>
+          <span class="val" id="generationDisplay">1.100 kWh/mês</span>
+        </div>
+        <div class="metric-chip">
+          <span class="lbl">Economia em 7 Anos</span>
+          <span class="val highlight" id="savingsDisplay">R$ 94.080</span>
+        </div>
+        <div class="metric-chip">
+          <span class="lbl">Complexidade</span>
+          <span class="val" id="tierDisplay" style="font-size:13px">Residencial Padrão</span>
+        </div>
+      </div>
+
+      <!-- Botão Direto para o WhatsApp da Empresa -->
+      <a class="btn-cta-wa" id="whatsappProjectBtn" href="https://wa.me/5511999999999" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.82 11.82 0 00-3.48-8.413z"/></svg>
+        <span>Solicitar Este Projeto no WhatsApp</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- SCRIPTS: Fog Hero 1 & Photographic Solar Simulator Hero 2 -->
+<script type="module">
+import { PhotographicSolarSimulator } from '/src/photographic-simulator.ts';
+
+const root=document.documentElement.style,$=id=>document.getElementById(id);
+const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+const DEPTH=0.27;
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const smooth=(a,b,x)=>{x=clamp((x-a)/(b-a));return x*x*(3-2*x)};
+
+let scrollProgress=0,targetProgress=0,renderedProgress=0;
+let night=0;
+
+// WebGL2 Fog Shader (Hero 1)
+const cv=$('fog'),gl=cv.getContext('webgl2',{alpha:true,premultipliedAlpha:true,antialias:false});
+let U={};
+if(gl){
+  const vs=`#version 300 es
+  void main(){vec2 p=vec2((gl_VertexID<<1)&2,gl_VertexID&2);gl_Position=vec4(p*2.-1.,0,1);}`;
+  const fs=`#version 300 es
+  precision highp float;
+  uniform vec2 R;uniform float T,S,K;out vec4 O;
+  float h(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
+  float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+    return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+  float fbm(vec2 p){float a=.5,s=0.;mat2 m=mat2(1.6,1.2,-1.2,1.6);p=mat2(.8,.6,-.6,.8)*p+5.3;for(int i=0;i<5;i++){s+=a*n(p);p=m*p;a*=.5;}return s;}
+  void main(){
+    vec2 uv=gl_FragCoord.xy/R;uv.y=1.-uv.y;
+    float asp=R.x/R.y;vec2 p=vec2(uv.x*asp,uv.y);
+    float t=T*.05;
+    vec2 w=vec2(fbm(p*1.3+vec2(t,-t*.6)),fbm(p*1.3+vec2(-t*.8,t)+7.));
+    float d=fbm(p*1.9+w*1.7+vec2(t*1.6,-t*1.1+S*.5));
+    float e=fbm(p*.9-w+vec2(-t,t*.5)+3.);
+    float low=smooth2(.70,1.04,uv.y+(d-.5)*.34);
+    float side=smooth2(.2,.0,uv.x+(e-.5)*.28)+smooth2(.8,1.,uv.x+(e-.5)*.28);
+    side*=smooth2(.25,.6,uv.y)*.2;
+    float wisps=smooth2(.5,.78,d)*smooth2(.22,.5,uv.y)*smooth2(.86,.6,uv.y)*.18;
+    float rest=clamp(low+side+wisps,0.,1.);
+    float front=1.02-S*.68;
+    float rise=smooth2(front-.02,front+.26,uv.y+(d-.5)*.5);
+    float haze=S*(.3+.46*d);
+    float a=clamp(max(rest,max(rise*.97,haze)),0.,1.);
+    vec3 dayA=vec3(.97,.93,.84),dayB=vec3(.79,.78,.71);
+    vec3 nitA=vec3(.40,.45,.57),nitB=vec3(.15,.19,.29);
+    vec3 c=mix(mix(dayB,dayA,d*1.15),mix(nitB,nitA,d*1.1),K);
+    float porch=exp(-dot((uv-vec2(.72,.74))*vec2(1.7,2.6),(uv-vec2(.72,.74))*vec2(1.7,2.6))*3.2);
+    c=mix(c,vec3(.86,.55,.27),K*porch*.42*(1.-S));
+    O=vec4(c*a,a);
+  }`.replace(/smooth2/g,'smoothstep');
+  const sh=(t,s)=>{const o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);
+    if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))console.error(gl.getShaderInfoLog(o));return o};
+  const pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));
+  gl.linkProgram(pr);gl.useProgram(pr);
+  for(const u of['R','T','S','K'])U[u]=gl.getUniformLocation(pr,u);
+}
+function size(){
+  if(!gl)return;
+  const w=Math.round(Math.min(innerWidth,960)),h=Math.round(w*innerHeight/innerWidth);
+  if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;gl.viewport(0,0,w,h)}
+}
+addEventListener('resize',size);size();
+
+function updateTelemetry(isNight){
+  const badge=$('telemetryText');
+  if(!badge)return;
+  badge.textContent=isNight
+    ? "Sistema Operando com Armazenamento Noturno (13.5 kWh)"
+    : "Geração Solar Ativa: 100% Autonomia e Injeção em Rede";
+}
+
+function show(n){
+  $('setM').classList.toggle('is-on',!n);
+  $('setN').classList.toggle('is-on',!!n);
+  updateTelemetry(!!n);
+}
+
+// Scroll Motion no Hero 1
+const scrollStage=$('scrollStage');
+function getHeroMaxScroll(){
+  return Math.max(1, scrollStage.offsetHeight - window.innerHeight);
+}
+function updateScrollTarget(){
+  const maxS=getHeroMaxScroll();
+  const currentY=window.scrollY||document.documentElement.scrollTop;
+  targetProgress=clamp(currentY/maxS,0,1);
+}
+window.addEventListener('scroll',updateScrollTarget,{passive:true});
+updateScrollTarget();
+
+function scrollToNight(isNight){
+  const maxS=getHeroMaxScroll();
+  const destY=isNight?maxS:0;
+  window.scrollTo({top:destY,behavior:'smooth'});
+}
+$('bm').onclick=()=>scrollToNight(false);
+$('bn').onclick=()=>scrollToNight(true);
+
+const scrollCue=$('scrollCue'),scrollCueText=$('scrollCueText');
+scrollCue.onclick=()=>{
+  if(renderedProgress>=0.95){
+    // Se já estiver na noite, scrolla suavemente para o Simulador 3D!
+    const simEl=$('simulador3d');
+    if(simEl)simEl.scrollIntoView({behavior:'smooth'});
+  }else{
+    scrollToNight(true);
+  }
+};
+
+// Navegação direta para o simulador 3D no topo
+$('btnNavSim').onclick=()=>{
+  const simEl=$('simulador3d');
+  if(simEl)simEl.scrollIntoView({behavior:'smooth'});
+};
+
+// Loop de animação do Hero 1
+function frame(now){
+  const diff=targetProgress-renderedProgress;
+  renderedProgress+=calm?diff:diff*0.14;
+  if(Math.abs(diff)<0.0005)renderedProgress=targetProgress;
+  const p=renderedProgress;
+
+  let y=0;
+  if(p<0.5){
+    const x=p/0.5;
+    y=x*x*(3-2*x)*DEPTH;
+  }else{
+    const x=(p-0.5)/0.5;
+    const inv=1-x;
+    y=inv*inv*(3-2*inv)*DEPTH;
+  }
+
+  const isNight=p>=0.5;
+  if(isNight!==night){
+    night=isNight;
+    show(night);
+    $('bm').setAttribute('aria-pressed',!night);
+    $('bn').setAttribute('aria-pressed',!!night);
+  }
+
+  const surge=smooth(0.08,0.46,p)*(1-smooth(0.54,0.92,p));
+  const dip=smooth(0.15,0.45,p)*(1-smooth(0.55,0.85,p));
+  const k=smooth(0.32,0.68,p);
+  const k2=smooth(0.38,0.75,p);
+
+  const onM=clamp(1-k,0,1);
+  const onN=clamp(k,0,1);
+
+  root.setProperty('--sink',(y*innerHeight).toFixed(1)+'px');
+  root.setProperty('--k',k.toFixed(3));
+  root.setProperty('--k2',k2.toFixed(3));
+  root.setProperty('--dip',dip.toFixed(3));
+  root.setProperty('--on-m',onM.toFixed(3));
+  root.setProperty('--on-n',onN.toFixed(3));
+
+  if(p<0.25){
+    scrollCueText.textContent="Role para descer na névoa e anoitecer ↓";
+  }else if(p<0.85){
+    scrollCueText.textContent="Atravessando a névoa para o ciclo noturno...";
+  }else{
+    scrollCueText.textContent="Role para o Simulador Solar ↓";
+  }
+
+  if(gl){
+    gl.uniform2f(U.R,cv.width,cv.height);
+    gl.uniform1f(U.T,now/1000);
+    gl.uniform1f(U.S,surge);
+    gl.uniform1f(U.K,k);
+    gl.drawArrays(gl.TRIANGLES,0,3);
+  }
+}
+function loop(t){frame(t);requestAnimationFrame(loop)}
+requestAnimationFrame(loop);
+
+// Inicializar Simulador Solar Fotográfico (Hero 2)
+const photoSimulator = new PhotographicSolarSimulator({
+  container: $('simulador-section'),
+  sliderEl: $('panelSlider'),
+  countDisplayEl: $('countDisplay'),
+  kwpDisplayEl: $('kwpDisplay'),
+  savingsDisplayEl: $('savingsDisplay'),
+  generationDisplayEl: $('generationDisplay'),
+  tierDisplayEl: $('tierDisplay'),
+  tierBadgeEl: $('photoTierBadge'),
+  whatsappBtnEl: $('whatsappProjectBtn'),
+  tierBtns: document.querySelectorAll('.tier-btn'),
+  backBtnEl: $('btnBackToHero'),
+  modeToggleBtns: document.querySelectorAll('.sim-mode-btn'),
+  houseImgEl: $('photoHouseImg'),
+});
+
+const btnNavSim = $('btnNavSim');
+if (btnNavSim) {
+  btnNavSim.onclick = () => {
+    $('simulador-section').scrollIntoView({ behavior: 'smooth' });
+  };
+}
+</script>
+</body>
+</html>

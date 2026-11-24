@@ -1,0 +1,6 @@
+{
+  "name": "Lumen Roof",
+  "description": "Esqueça o mercado de energia, as condições climáticas e as estações do ano. Nosso Controlador Inteligente garante zero conta de luz por 7 anos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
